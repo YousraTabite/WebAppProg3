@@ -101,5 +101,65 @@
         <td>About $600</td>
     </tr>
 </table>
+<hr>
+
+<h2>Java Code Display: UnsortedHashSet</h2>
+
+<p>
+    This Java code creates an unsorted hash set that uses a hash table
+    with linked lists to store values. The add method adds new elements
+    while preventing duplicates, and the table resizes when it becomes too full.
+</p>
+
+<pre>
+import java.util.LinkedList;
+import java.lang.reflect.Array;
+
+public class UnsortedHashSet&lt;E&gt; {
+
+    private static final double LOAD_FACTOR_LIMIT = 0.7;
+
+    private int size;
+    private LinkedList&lt;E&gt;[] con;
+
+    public UnsortedHashSet() {
+        con = (LinkedList&lt;E&gt;[])(new LinkedList[10]);
+    }
+
+    public boolean add(E obj) {
+        int oldSize = size;
+        int index = Math.abs(obj.hashCode()) % con.length;
+        if(con[index] == null)
+            con[index] = new LinkedList&lt;E&gt;();
+        if(!con[index].contains(obj)) {
+            con[index].add(obj);
+            size++;
+        }
+        if(1.0 * size / con.length &gt; LOAD_FACTOR_LIMIT)
+            resize();
+        return oldSize != size;
+    }
+
+    private void resize() {
+        UnsortedHashSet&lt;E&gt; temp = new UnsortedHashSet&lt;E&gt;();
+        temp.con = (LinkedList&lt;E&gt;[])(new LinkedList[con.length * 2 + 1]);
+        for(int i = 0; i &lt; con.length; i++){
+            if(con[i] != null)
+                for(E e : con[i])
+                    temp.add(e);
+        }
+        con = temp.con;
+    }
+
+    public int size() {
+        return size;
+    }
+}
+</pre>
+<p>
+    <a href="https://www.cs.utexas.edu/~scottm/cs307/javacode/codeSamples/UnsortedHashSet.java">
+        Source for UnsortedHashSet Code
+    </a>
+</p>
 </body>
 </html>
